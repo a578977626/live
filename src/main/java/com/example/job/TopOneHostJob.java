@@ -21,7 +21,7 @@ public class TopOneHostJob {
     /**
      * 抓取斗鱼的TOP1主播
      */
-    @Scheduled(fixedDelay=ONE_MINUTE)
+//    @Scheduled(fixedDelay=ONE_MINUTE)
     public void getDouYuTopHostJob(){
     	 System.out.println(" 执行斗鱼主播数据抓取------topOne-douyu");
     	 
@@ -36,7 +36,7 @@ public class TopOneHostJob {
     /**
      * 抓取熊猫的TOP1主播
      */
-    @Scheduled(fixedDelay=ONE_MINUTE)
+//    @Scheduled(fixedDelay=ONE_MINUTE)
     public void getXiongMaoTopHostJob(){
     	 System.out.println(" 执行熊猫主播数据抓取------topOne-xiongmao");
     	 
@@ -46,5 +46,65 @@ public class TopOneHostJob {
 	        redisService.handleTopHostRedis(xiongMaoTop1);
 	        
         System.out.println(" >>熊猫topOne抓取完毕....");
+    }
+    
+    /**
+     * 抓取战旗的TOP1主播
+     */
+//    @Scheduled(fixedDelay=ONE_MINUTE)
+    public void getZhanQiTopHostJob(){
+    	 System.out.println(" 执行战旗主播数据抓取------topOne-zhanqi");
+    	 
+	        String zqUrl = "https://www.zhanqi.tv/lives";  
+	        List<TopHost> hostList = CommonTools.getZhanQiListHostDataOnline(zqUrl);
+	        TopHost xiongMaoTop1 = CommonTools.sortTop(hostList, "zhanqi") ;
+	        redisService.handleTopHostRedis(xiongMaoTop1);
+	        
+        System.out.println(" >>战旗topOne抓取完毕....");
+    }
+    
+    /**
+     * 抓取虎牙的TOP1主播
+     */
+//    @Scheduled(fixedDelay=ONE_MINUTE)
+    public void getHuYaTopHostJob(){
+    	 System.out.println(" 执行虎牙主播数据抓取------topOne-huya");
+    	 
+	        String hyUrl = "http://www.huya.com/l";  
+	        List<TopHost> hostList = CommonTools.getHuYaListHostDataOnline(hyUrl);
+	        TopHost Top1 = CommonTools.sortTop(hostList, "huya") ;
+	        redisService.handleTopHostRedis(Top1);
+	        
+        System.out.println(" >>虎牙topOne抓取完毕....");
+    }
+    
+    /**
+     * 抓取YY的TOP1主播
+     */
+//    @Scheduled(fixedDelay=ONE_MINUTE)
+    public void getYYTopHostJob(){
+    	 System.out.println(" 执行YY主播数据抓取------topOne-huya");
+    	 
+	        String yyUrl = "http://www.yy.com/";  
+	        List<TopHost> hostList = CommonTools.getYYListHostDataOnline(yyUrl);
+	        TopHost Top1 = CommonTools.sortTop(hostList, "yy") ;
+	        redisService.handleTopHostRedis(Top1);
+	        
+        System.out.println(" >>YY topOne抓取完毕....");
+    }
+    
+    /**
+     * 抓取龙珠的TOP1主播
+     */
+    @Scheduled(fixedDelay=ONE_MINUTE)
+    public void getLongZhuTopHostJob(){
+    	 System.out.println(" 执行龙珠主播数据抓取------topOne-huya");
+    	 
+	        String lzUrl = "http://longzhu.com/channels/all";  
+	        List<TopHost> hostList = CommonTools.getLongZhuListHostDataOnline(lzUrl);
+	        TopHost Top1 = CommonTools.sortTop(hostList, "longzhu") ;
+	        redisService.handleTopHostRedis(Top1);
+	        
+        System.out.println(" >>龙珠 topOne抓取完毕....");
     }
 }

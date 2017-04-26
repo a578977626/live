@@ -17,7 +17,7 @@ public class RedisOperateService {
 	public void handleTopHostRedis(TopHost host){
 		redisTemplate.opsForHash().put("top1", host.getPlatform(), host);
 		TopHost host1 = (TopHost) redisTemplate.opsForHash().get("top1", host.getPlatform());
-		System.out.println(host1.getHostName()+host1.getAddress());
+		System.out.println(host1.getHostName()+"------"+host1.getAddress());
 
 	}
 }

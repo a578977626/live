@@ -147,6 +147,10 @@ public class CommonTools {
   
         List<TopHost> hostList = new ArrayList<TopHost>();
         for (Element link : links) {
+        	String liveNum = "0";
+        	if(link.getElementsByClass("video-number").size()>0){
+        		liveNum = link.getElementsByClass("video-number").get(0).text();
+        	}
         	String herf = link.attr("abs:href");
         	String name = link.getElementsByClass("video-nickname").get(0).text();
         	String roomId = link.attr("data-id");
@@ -155,6 +159,174 @@ public class CommonTools {
         	host.setAddress(herf);
         	host.setHostName(name);
         	host.setRoomId(roomId);
+        	host.setLiveNum(caculateNum(liveNum));
+        	
+        	hostList.add(host);
+        } 
+        return hostList;
+	
+	}
+	
+	
+	
+	/**
+	 * 获取熊猫主页所有主播的在线信息
+	 */
+	public static List<TopHost> getLongZhuListHostDataOnline(String url){
+		Document doc = getDocByUrl(url); 
+		doc.setBaseUri("http://www.longzhu.com");
+		
+        Elements links = doc.select("a[data-id]");  
+  
+        List<TopHost> hostList = new ArrayList<TopHost>();
+        for (Element link : links) {
+        	String liveNum = "0";
+        	if(link.getElementsByClass("video-number").size()>0){
+        		liveNum = link.getElementsByClass("video-number").get(0).text();
+        	}
+        	String herf = link.attr("abs:href");
+        	String name = link.getElementsByClass("video-nickname").get(0).text();
+        	String roomId = link.attr("data-id");
+//        	String headPortrait = getXiongMaoHPByUrl(herf);//不需要头像
+        	TopHost host = new TopHost("xiongmao",null);
+        	host.setAddress(herf);
+        	host.setHostName(name);
+        	host.setRoomId(roomId);
+        	host.setLiveNum(caculateNum(liveNum));
+        	
+        	hostList.add(host);
+        } 
+        return hostList;
+	
+	}
+	
+	
+	/**
+	 * 获取YY主页所有主播的在线信息
+	 */
+	public static List<TopHost> getYYListHostDataOnline(String url){
+		Document doc = getDocByUrl(url); 
+		doc.setBaseUri("http://www.yy.com");
+		
+        Elements links = doc.select("div.video-info");  
+  
+        List<TopHost> hostList = new ArrayList<TopHost>();
+        /*
+       <div class="video-info"> 
+ <p class="video-title"><a href="/52831903/52831903?tempId=16777217" target="_blank" title="天佑师傅神秘人" data-stat-act-type="3">天佑师傅神秘人</a></p> 
+ <div class="audience-count"> 
+  <i class="icon-people"></i>20404
+ </div> 
+</div>
+         */
+        for (Element link : links) {
+        	String liveNum = "0";
+        	if(link.getElementsByClass("audience-count").size()>0){
+        		liveNum = link.getElementsByClass("audience-count").get(0).text();
+        	}
+        	String herf = link.select("a").get(0).attr("abs:href");
+        	String name = link.select("a").get(0).text();
+//        	String roomId = link.attr("data-id");
+//        	String headPortrait = getXiongMaoHPByUrl(herf);//不需要头像
+        	TopHost host = new TopHost("xiongmao",null);
+        	host.setAddress(herf);
+        	host.setHostName(name);
+        	host.setRoomId(herf);//暂时没有roomID
+        	host.setLiveNum(caculateNum(liveNum));
+        	
+        	hostList.add(host);
+        } 
+        return hostList;
+	
+	}
+	
+	/**
+	 * 获取虎牙主页所有主播的在线信息
+	 */
+	public static List<TopHost> getHuYaListHostDataOnline(String url){
+		Document doc = getDocByUrl(url); 
+		doc.setBaseUri("http://www.huya.com");
+		
+        Elements links = doc.select("li.game-live-item");  
+  /*
+   * <li class="game-live-item"> 
+<a href="http://www.huya.com/heigou" class="video-info new-clickstat" target="_blank" report="{&quot;eid&quot;:&quot;click/position&quot;,&quot;position&quot;:&quot;allLive/0/1/11&quot;,&quot;game_id&quot;:&quot;1&quot;,&quot;ayyuid&quot;:&quot;107524968&quot;}"> 
+<img class="pic" data-original="http://screenshot.dwstatic.com/yysnapshot/7066622bbd2e94786898def302f1f2d5dec200b7?imageview/4/0/w/338/h/190/blur/1" src="http://assets.dwstatic.com/amkit/p/duya/common/img/default_live.jpg" alt="黑店百地的直播" title="黑店百地的直播"> <em class="tag tag-recommend">大神推荐</em> 
+  <div class="item-mask">
+  </div>
+  <i class="btn-link__hover_i"></i> 
+  </a> 
+  <a href="http://www.huya.com/heigou" class="title new-clickstat" report="{&quot;eid&quot;:&quot;click/position&quot;,&quot;position&quot;:&quot;allLive/0/1/11&quot;,&quot;game_id&quot;:&quot;1&quot;,&quot;ayyuid&quot;:&quot;107524968&quot;}" title="帮对面上单戒网瘾系列" target="_blank">帮对面上单戒网瘾系列</a> 
+  <span class="txt"> 
+  <span class="avatar fl">
+  <img data-original="http://huyaimg.dwstatic.com/avatar/1033/bd/39b5110640ab7438ca3c59264ac247_180_135.jpg" src="http://assets.dwstatic.com/amkit/p/duya/common/img/default_profile.jpg" alt="黑店百地" title="黑店百地"> 
+  <i class="nick" title="黑店百地">黑店百地</i> </span>
+  <span class="game-type fr"><a target="_blank" href="http://www.huya.com/g/lol" title="英雄联盟">英雄联盟</a>
+  </span> <span class="num"><i class="num-icon"></i><i class="js-num">16.7万</i></span> </span> </li>
+   */
+        List<TopHost> hostList = new ArrayList<TopHost>();
+        for (Element link : links) {
+        	String liveNum = "0";
+        	if(link.getElementsByClass("js-num").size()>0){
+        		liveNum = link.getElementsByClass("js-num").get(0).text();
+        	}
+        	String herf =link.select("a").get(1).attr("abs:href");
+        	String name = link.getElementsByClass("nick").get(0).text();
+//        	String roomId = link.attr("data-id");
+//        	String headPortrait = getXiongMaoHPByUrl(herf);//不需要头像
+        	TopHost host = new TopHost("huya",null);
+        	host.setAddress(herf);
+        	host.setHostName(name);
+        	host.setRoomId(herf);//这个roomId拿不到
+        	host.setLiveNum(caculateNum(liveNum));
+        	
+        	hostList.add(host);
+        } 
+        return hostList;
+	
+	}
+	
+	/**
+	 * 获取战旗主页所有主播的在线信息
+	 */
+	public static List<TopHost> getZhanQiListHostDataOnline(String url){
+		Document doc = getDocByUrl(url); 
+		doc.setBaseUri("https://www.zhanqi.tv");
+		
+		Elements links = doc.select("li[data-room-id]"); 
+  
+        List<TopHost> hostList = new ArrayList<TopHost>();
+        /*
+         * <li data-room-id="204859" class=""> <a href="/77777" class="js-jump-link"> 
+  			<div class="imgBox"> 
+   <i class="sub-mask"></i> 
+   <i class="play-icon"></i> 
+   <img src="https://img2.zhanqi.tv/live/20170426/204859_2017-04-26-20-29-46_big.jpg" alt="盖世亚索 王者组的蒂花之秀~"> 
+  </div> 
+  <div class="info-area"> 
+   <span class="name">盖世亚索 王者组的蒂花之秀~</span> 
+   <div class="meat"> 
+    <span class="views"> <i class="icon-eye dv"></i> <span class="dv">15.3万</span> </span> 
+    <i class="dv sex-woman"></i> 
+    <span class="anchor anchor-to-cut dv">七神丶Yasuo</span> 
+    <span class="game-name dv">英雄联盟</span> 
+   </div> 
+  </div> </a> </li>
+         */
+        for (Element linkOrigin : links) {
+        	Element link = linkOrigin.getElementsByClass("js-jump-link").first();
+        	String liveNum = "0";
+        	if( link.getElementsByClass("dv").size()>2){
+        		liveNum = link.getElementsByClass("dv").get(1).text();
+        	}
+        	String herf = link.attr("abs:href");
+        	String name = link.getElementsByClass("anchor-to-cut").get(0).text();
+        	String roomId = linkOrigin.attr("data-room-id");
+        	TopHost host = new TopHost("zhanqi",null);
+        	host.setAddress(herf);
+        	host.setHostName(name);
+        	host.setRoomId(roomId);
+        	host.setLiveNum(caculateNum(liveNum));
         	
         	hostList.add(host);
         } 
