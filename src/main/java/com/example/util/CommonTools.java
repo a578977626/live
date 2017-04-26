@@ -143,29 +143,23 @@ public class CommonTools {
 		Document doc = getDocByUrl(url); 
 		doc.setBaseUri("http://www.panda.tv");
 		
-		Elements links = doc.select("a[data-id]");   
+        Elements links = doc.select("a[data-id]");  
   
         List<TopHost> hostList = new ArrayList<TopHost>();
         for (Element link : links) {
-        	Elements ss = link.getElementsByClass("dy-num fr");
-        	String liveNum = "0";
-        	if(ss.size()>0){
-        		 liveNum = ss.get(0).text();
-        	}
         	String herf = link.attr("abs:href");
-        	String name = link.getElementsByClass("dy-name").get(0).text();
-        	String roomId = link.attr("data-rid");
-//        	String headPortrait = getDouYuHPByUrl(herf);不需要头像，其实这里需要改造，到时只需要房间id，因为我已经把主播数据都抓下来了
-        	TopHost topHoost = new TopHost("douyu",null);
-        	topHoost.setAddress(herf);
-        	topHoost.setHostName(name);
-//        	topHoost.setHeadPortrait(headPortrait);
-        	topHoost.setRoomId(roomId);
-        	topHoost.setLiveNum(caculateNum(liveNum));
+        	String name = link.getElementsByClass("video-nickname").get(0).text();
+        	String roomId = link.attr("data-id");
+//        	String headPortrait = getXiongMaoHPByUrl(herf);//不需要头像
+        	TopHost host = new TopHost("xiongmao",null);
+        	host.setAddress(herf);
+        	host.setHostName(name);
+        	host.setRoomId(roomId);
         	
-        	hostList.add(topHoost);
+        	hostList.add(host);
         } 
         return hostList;
+	
 	}
 	
 	public static List<Host> getXiongMaoListHostData(String url){

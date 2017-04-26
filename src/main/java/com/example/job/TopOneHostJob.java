@@ -3,16 +3,11 @@ package com.example.job;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import com.example.model.Host;
 import com.example.model.TopHost;
-import com.example.rep.HostRespository;
 import com.example.service.RedisOperateService;
 import com.example.util.CommonTools;
-import com.example.util.WebDriverManBase;
 
 @Component
 public class TopOneHostJob {
@@ -20,10 +15,6 @@ public class TopOneHostJob {
     
     public final static long HALF_HOUR =  60 * 30 * 1000;
     
-    
-    
-    @Autowired
-   	private HostRespository hostRespository;
     @Autowired
     private RedisOperateService redisService;
     
@@ -47,10 +38,10 @@ public class TopOneHostJob {
      */
     @Scheduled(fixedDelay=ONE_MINUTE)
     public void getXiongMaoTopHostJob(){
-    	 System.out.println(" 执行斗鱼主播数据抓取------topOne-xiongmao");
+    	 System.out.println(" 执行熊猫主播数据抓取------topOne-xiongmao");
     	 
 	        String xmurl = "http://www.panda.tv/all";  
-	        List<TopHost> hostList = CommonTools.getDouYuListHostDataOnline(xmurl);
+	        List<TopHost> hostList = CommonTools.getXiongMaoListHostDataOnline(xmurl);
 	        TopHost xiongMaoTop1 = CommonTools.sortTop(hostList, "xiongmao") ;
 	        redisService.handleTopHostRedis(xiongMaoTop1);
 	        
