@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.example.model.Top;
+import com.example.model.TopHost;
 import com.example.redis.RedisObjectSerializer;
 @Configuration
 public class RedisConfig {
@@ -17,8 +18,17 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Top> redisTemplate(RedisConnectionFactory factory) {
+    public RedisTemplate<String, Top> redisTemplateTop(RedisConnectionFactory factory) {
         RedisTemplate<String, Top> template = new RedisTemplate<String, Top>();
+        template.setConnectionFactory(factory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new RedisObjectSerializer());
+        return template;
+    }
+    
+    @Bean
+    public RedisTemplate<String, TopHost> redisTemplateHostTop(RedisConnectionFactory factory) {
+        RedisTemplate<String, TopHost> template = new RedisTemplate<String, TopHost>();
         template.setConnectionFactory(factory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new RedisObjectSerializer());

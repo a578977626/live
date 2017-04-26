@@ -14,16 +14,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.job.LiveJob;
 import com.example.model.Host;
 import com.example.model.Top;
+import com.example.model.TopHost;
 
 public class CommonTools {
-	/**
-	 * 获取top1
-	 */
-	public static Top getDouYuData(String url){
-		List<Top> topList = getDouYuListData(url);
-        Top maxTop = sortTop(topList, "douyu");
-        return maxTop;
-	}
+	
 	/**
 	 * 获取斗鱼主页所有主播的基本信息
 	 */
@@ -98,6 +92,81 @@ public class CommonTools {
         return hostList;
 	}
 	
+	/**
+	 * 获取斗鱼主页所有主播的在线信息
+	 */
+	public static List<TopHost> getDouYuListHostDataOnline(String url){
+		Document doc = getDocByUrl(url); 
+		doc.setBaseUri("https://www.douyu.com");
+		
+        Elements links = doc.select("a[data-rid]");  
+  
+        List<TopHost> hostList = new ArrayList<TopHost>();
+        /* link
+         * <a class="play-list-link" data-rid="627180" data-tid="222" data-sid="301" data-rpos="0" data-sub_rt="0" href="/daxuekuaipao" title="大学快跑" target="_blank"> <span class="imgbox"> <b></b> <i class="black"></i> <img data-original="https://rpic.douyucdn.cn/a1702/20/23/627180_170220235859.jpg" src="https://shark.douyucdn.cn/app/douyu/res/page/list-item-def-thumb.gif" width="283" height="163"> </span> 
+ 				<div class="mes"> 
+  					<div class="mes-tit"> 
+   						<h3 class="ellipsis"> 大学快跑 </h3> 
+   						<span class="tag ellipsis">校园</span> 
+  					</div> 
+  				<p> <span class="dy-name ellipsis fl">大学快跑</span> </p> 
+ 				</div> 
+ 		   </a>
+         */
+        for (Element link : links) {
+        	Elements ss = link.getElementsByClass("dy-num fr");
+        	String liveNum = "0";
+        	if(ss.size()>0){
+        		 liveNum = ss.get(0).text();
+        	}
+        	String herf = link.attr("abs:href");
+        	String name = link.getElementsByClass("dy-name").get(0).text();
+        	String roomId = link.attr("data-rid");
+//        	String headPortrait = getDouYuHPByUrl(herf);不需要头像，其实这里需要改造，到时只需要房间id，因为我已经把主播数据都抓下来了
+        	
+        	TopHost topHoost = new TopHost("douyu",null);
+        	topHoost.setAddress(herf);
+        	topHoost.setHostName(name);
+//        	topHoost.setHeadPortrait(headPortrait);
+        	topHoost.setRoomId(roomId);
+        	topHoost.setLiveNum(caculateNum(liveNum));
+        	
+        	hostList.add(topHoost);
+        } 
+        return hostList;
+	}
+	
+	/**
+	 * 获取熊猫主页所有主播的在线信息
+	 */
+	public static List<TopHost> getXiongMaoListHostDataOnline(String url){
+		Document doc = getDocByUrl(url); 
+		doc.setBaseUri("http://www.panda.tv");
+		
+		Elements links = doc.select("a[data-id]");   
+  
+        List<TopHost> hostList = new ArrayList<TopHost>();
+        for (Element link : links) {
+        	Elements ss = link.getElementsByClass("dy-num fr");
+        	String liveNum = "0";
+        	if(ss.size()>0){
+        		 liveNum = ss.get(0).text();
+        	}
+        	String herf = link.attr("abs:href");
+        	String name = link.getElementsByClass("dy-name").get(0).text();
+        	String roomId = link.attr("data-rid");
+//        	String headPortrait = getDouYuHPByUrl(herf);不需要头像，其实这里需要改造，到时只需要房间id，因为我已经把主播数据都抓下来了
+        	TopHost topHoost = new TopHost("douyu",null);
+        	topHoost.setAddress(herf);
+        	topHoost.setHostName(name);
+//        	topHoost.setHeadPortrait(headPortrait);
+        	topHoost.setRoomId(roomId);
+        	topHoost.setLiveNum(caculateNum(liveNum));
+        	
+        	hostList.add(topHoost);
+        } 
+        return hostList;
+	}
 	
 	public static List<Host> getXiongMaoListHostData(String url){
 		Document doc = getDocByUrl(url); 
@@ -218,7 +287,8 @@ public class CommonTools {
         	
         	topList.add(top);
         } 
-        Top maxTop = sortTop(topList, "zhanqi");
+//        Top maxTop = sortTop(topList, "zhanqi");
+        Top maxTop = new Top();
         return maxTop;
 	}
 	public static Document getDocByUrl (String url){
@@ -242,15 +312,15 @@ public class CommonTools {
 		return  last;
 	}
 	
-	public static Top sortTop( List<Top> topList,String tvName){
+	public static TopHost sortTop( List<TopHost> topList,String tvName){
 		Float max = 1.0f;
-        Top maxTop = new Top(tvName);
-        for(Top top:topList){
-        	if(top.getLivenum()>max){
-        		max = top.getLivenum();
-        		maxTop.setHostname(top.getHostname());
+        TopHost maxTop = new TopHost(tvName,null);
+        for(TopHost top:topList){
+        	if(top.getLiveNum()>max){
+        		max = top.getLiveNum();
+        		maxTop.setHostName(top.getHostName());
         		maxTop.setAddress(top.getAddress());
-        		maxTop.setLivenum(max);
+        		maxTop.setLiveNum(max);
         	}
         };
         return maxTop;

@@ -38,11 +38,14 @@ public class RedisLiveTest {
 
 		user = new Top("蜘蛛侠", "40");
 		redisTemplate.opsForValue().set(user.getTv(), user);
+		
+		redisTemplate.opsForHash().put("top1", "douyu", user);
 
 		Assert.assertEquals("20", ( redisTemplate.opsForValue().get("超人")).getHostname());
 		Assert.assertEquals("30", ( redisTemplate.opsForValue().get("蝙蝠侠")).getHostname());
 		Assert.assertEquals("40", ( redisTemplate.opsForValue().get("蜘蛛侠")).getHostname());
-		System.out.println("ist done!!");
+		Assert.assertEquals("40", ( ((Top) redisTemplate.opsForHash().get("top1", "douyu")).getHostname()));
+		System.out.println("ist done!!"+ ((Top) redisTemplate.opsForHash().get("top1", "douyu")).getHostname());
 
 	}
 

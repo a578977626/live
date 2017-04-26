@@ -1,5 +1,7 @@
 package com.example.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +15,9 @@ import javax.persistence.Table;
  * @author chenxb2
  *
  */
-public class Host {
+public class Host implements Serializable{
+
+	private static final long serialVersionUID = 6621399515538187266L;
 
 	public Host(){
 		

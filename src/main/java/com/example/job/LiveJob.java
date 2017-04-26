@@ -27,7 +27,6 @@ public class LiveJob {
     
     @Autowired
    	private HostRespository hostRespository;
-    
 //    @Scheduled(fixedDelay=ONE_MINUTE)
 //    public void fixedDelayJob(){
 //    	 	String zqurl = "http://www.zhanqi.tv/lives"; 
@@ -70,7 +69,7 @@ public class LiveJob {
     /**
      * 抓取熊猫的主播数据并保存到数据库
      */
-    @Scheduled(fixedDelay=ONE_MINUTE)//在上一个任务完成之后，5s后再次执行,是线程安全的
+//    @Scheduled(fixedDelay=ONE_MINUTE)//在上一个任务完成之后，5s后再次执行,是线程安全的
     public void getPandaHostJob(){
     	 System.out.println(" 执行熊猫主播数据抓取");
     	 
