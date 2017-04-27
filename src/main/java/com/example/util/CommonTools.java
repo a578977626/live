@@ -167,6 +167,59 @@ public class CommonTools {
 	
 	}
 	
+	
+	/**
+	 * 获取美拍主页所有主播的在线信息
+	 */
+	public static List<TopHost> getMeiPaiListHostDataOnline(String url){
+		Document doc = getDocByUrl(url); 
+		doc.setBaseUri("http://www.meipai.com/live");
+		
+        Elements links = doc.select("li.J_media_list_item");  
+        /*
+         * <li class="pr no-select loading  J_media_list_item" itemscope itemtype="http://schema.org/VideoObject"> 
+ <meta itemprop="uploadDate" content="2017-04-27T22:32:53+08:00"> <img src="http://mvimg11.meitudata.com/59020115affb51396.jpg!thumb320" width="300" height="300" class="db pa pai" alt="【NaCl•盐.美拍直播】啦啦啦，迟到了" itemprop="thumbnailUrl"> 
+ <div id="wlive6263369150614278145" class="pr live-list-item"> 
+  <a hidefocus href="http://www.meipai.com/live/6263369150614278145" class="live-list-item db" target="_blank" itemprop="url"> 
+   <meta itemprop="name" content="NaCl•盐.美拍直播"> <span class="pa ic-i-live" style="left: 11px;top: 12px;"></span> 
+   <div class="layer-black pa"></div> <i class="pa ic-i-play"></i> 
+   <div class="pa content-l-p ellipsis" itemprop="description">
+     啦啦啦，迟到了 
+   </div> </a> 
+ </div> 
+ <div class="pr" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"> 
+  <span data-href="/user/16906461" class="js-span-a dbl h48"> <img src="http://mvavatar1.meitudata.com/5871caeaac09b1882.jpg!thumb60" width="28" height="28" class="avatar m10" title="NaCl•盐." alt="NaCl•盐."> <img src="//img.app.meitudata.com/meitumv/images/vip.png?v1" width="10" height="10" class="pa c-vip" alt=""> </span> 
+  <p class="content-name live-content-name pa"> <a hidefocus href="/user/16906461" class="content-name-a" title="NaCl•盐.">NaCl•盐.</a> </p> 
+  <meta itemprop="itemReviewed" content="NaCl•盐.美拍直播"> 
+  <meta itemprop="reviewCount" content="13928"> 
+  <a hidefocus href="http://www.meipai.com/live/6263369150614278145" class="db pa content-people" target="_blank"> <i class="ic ic-i-people"></i> 98624 </a> 
+  <a hidefocus href="http://www.meipai.com/live/6263369150614278145" class="conten-command live-conten-command pa" target="_blank"> <i class="ic ic-i-like"></i> 200.5万 
+   <meta itemprop="ratingValue" content="200.5万个赞"> </a> 
+ </div> </li>
+         */
+        List<TopHost> hostList = new ArrayList<TopHost>();
+        for (Element link : links) {
+        	String liveNum = "0";
+        	if(link.getElementsByClass("live-conten-command").size()>0){
+        		liveNum = link.getElementsByClass("live-conten-command").get(0).text();
+        	}
+        	String herf = link.select("a").get(0).attr("href");
+        	String name = link.getElementsByClass("content-name-a").get(0).text();
+        	String roomId = link.select("div[id]").get(0).attr("id");
+        	System.out.println(roomId);
+//        	String headPortrait = getXiongMaoHPByUrl(herf);//不需要头像
+        	TopHost host = new TopHost("meipai",null);
+        	host.setAddress(herf);
+        	host.setHostName(name);
+        	host.setRoomId(roomId);
+        	host.setLiveNum(caculateNum(liveNum));
+        	
+        	hostList.add(host);
+        } 
+        return hostList;
+	
+	}
+	
 	/**
 	 * 获取Bilbili主页所有主播的在线信息
 	 */

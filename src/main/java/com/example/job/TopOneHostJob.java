@@ -112,7 +112,7 @@ public class TopOneHostJob {
      * 抓取bilibili的TOP1主播 
      * use phantomJs
      */
-    @Scheduled(fixedDelay=ONE_MINUTE)
+//    @Scheduled(fixedDelay=ONE_MINUTE)
     public void getBiLiTopHostJob(){
     	 System.out.println(" 执行Bilibili主播数据抓取------topOne-Bilibl");
     	 
@@ -122,6 +122,22 @@ public class TopOneHostJob {
 	        redisService.handleTopHostRedis(Top1);
 	        
         System.out.println(" >>BilBiLI topOne抓取完毕....");
-    }    	
+    }    
+    
+    /**
+     * 抓取美拍的TOP1主播
+     */
+//    @Scheduled(fixedDelay=ONE_MINUTE)
+    public void getMeiPaiTopHostJob(){
+    	 System.out.println(" 执行美拍主播数据抓取------topOne-meipai");
+    	 
+	        String xmurl = "http://www.meipai.com/live";  
+	        List<TopHost> hostList = CommonTools.getMeiPaiListHostDataOnline(xmurl);
+	        TopHost Top1 = CommonTools.sortTop(hostList, "meipai") ;
+	        redisService.handleTopHostRedis(Top1);
+	        
+        System.out.println(" >>美拍topOne抓取完毕....");
+    }
+    
     	
 }
