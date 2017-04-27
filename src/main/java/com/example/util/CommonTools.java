@@ -167,31 +167,83 @@ public class CommonTools {
 	
 	}
 	
+	/**
+	 * 获取Bilbili主页所有主播的在线信息
+	 */
+	public static List<TopHost> getBiLiListHostDataOnline(String url){
+		Document doc = PhantomJsTools.getSouceCodeByPhantomJs(url);
+		doc.setBaseUri("http://live.bilibili.com");
+		
+        Elements links = doc.select("a.move-in-left");  
+  
+        List<TopHost> hostList = new ArrayList<TopHost>();
+        /*
+         * <a class="move-in-left" href="/335" target="_blank"> <li class="video-list-item index-1"> 
+  <div class="video-preview move-in-left" style="background-image: url(http://i0.hdslb.com/bfs/live/3dfc3e1778aeba4437cdbe2e2372033487f3072f.jpg_200x128.jpg);"> 
+   <div class="hover-panel w-100 h-100 p-absolute p-zero"> 
+    <div class="bg-merge w-100 b-circle p-absolute p-zero ts-dot-6"></div> 
+    <div class="avatar b-circle p-absolute bg-cover" style="background-image: url(http://i2.hdslb.com/bfs/face/dd7afe129eea5b2594246f701e23c4294c7270c2.jpg);"> 
+     <i class="live-icon on-live p-absolute"></i> 
+    </div> 
+   </div> 
+  </div> <h5 class="video-title" title="温柔的小哥哥">温柔的小哥哥</h5> 
+  <div class="anchor-info-ctnr"> 
+   <span class="anchor-name"> <i class="live-icon-small eye2"></i> <span title="denis鸣鹿">denis鸣鹿</span> </span> 
+   <span class="viewers-count"> <i class="live-icon-small anchor2"></i> <span>7674</span> </span> 
+  </div> 
+  <!--ms-if--> </li> </a>
+         */
+        for (Element link : links) {
+        	String liveNum = "0";
+        	if(link.getElementsByClass("viewers-count").size()>0){
+        		liveNum = link.getElementsByClass("viewers-count").get(0).text();
+        	}
+        	String herf = link.attr("abs:href");
+        	String name = link.getElementsByClass("anchor-name").get(0).text();
+        	String roomId = link.attr("href");
+//        	String headPortrait = getXiongMaoHPByUrl(herf);//不需要头像
+        	TopHost host = new TopHost("bili",null);
+        	host.setAddress(herf);
+        	host.setHostName(name);
+        	host.setRoomId(roomId);
+        	host.setLiveNum(caculateNum(liveNum));
+        	
+        	hostList.add(host);
+        } 
+        return hostList;
 	
+	}
 	
 	/**
-	 * 获取熊猫主页所有主播的在线信息
+	 * 获取龙珠主页所有主播的在线信息
 	 */
 	public static List<TopHost> getLongZhuListHostDataOnline(String url){
 		Document doc = getDocByUrl(url); 
 		doc.setBaseUri("http://www.longzhu.com");
 		
-        Elements links = doc.select("a[data-id]");  
+        Elements links = doc.select("a.livecard");  
   
         List<TopHost> hostList = new ArrayList<TopHost>();
+        /*
+         * <a href="http://star.longzhu.com/xuxubaobao?from=challcontent" id="livecard-19569" class="livecard" target="_blank" data-action="go to xuxubaobao" data-label="text:送100套五一套,roomid:19569,domain:xuxubaobao,position:0" data-cate="lz.channels"> <img src="http://img2.plures.net/live/screenshots/19569/022b/1f7b/a567/1106/e72b/be9d/8a9d/b902_1493294748.jpg" alt="送100套五一套" class="livecard-thumb "> <h3 class="listcard-caption" title="送100套五一套">送100套五一套</h3> 
+ <ul class="livecard-meta"> 
+  <li class="livecard-meta-item livecard-meta-views"> <span class="livecard-meta-item-label">观看人数:</span> <span class="livecard-meta-item-text">61.5万</span> </li> 
+  <li class="livecard-meta-item livecard-meta-game"> <span class="livecard-meta-item-label">所属游戏:</span> <span class="livecard-meta-item-text">地下城与勇士</span> </li> 
+ </ul> <span class="livecard-modal"> <strong class="livecard-modal-username">旭旭宝宝</strong> <i class="licecard-modal-playicon"></i> </span> <img src="http://img2.plures.net/users/avatar/006/334/152/6334152/255e73f34265153f710f1d04783f3a0d.jpg" alt="http://img2.plures.net/users/avatar/006/334/152/6334152/255e73f34265153f710f1d04783f3a0d.jpg" class="livecard-avatar" style="display: none;"> <span class="livecard-badge">国服第一红眼</span> </a>
+         */
         for (Element link : links) {
         	String liveNum = "0";
-        	if(link.getElementsByClass("video-number").size()>0){
-        		liveNum = link.getElementsByClass("video-number").get(0).text();
+        	if(link.getElementsByClass("livecard-meta-item-text").size()>1){
+        		liveNum = link.getElementsByClass("livecard-meta-item-text").get(0).text();
         	}
         	String herf = link.attr("abs:href");
-        	String name = link.getElementsByClass("video-nickname").get(0).text();
-        	String roomId = link.attr("data-id");
+        	String name = link.getElementsByClass("livecard-modal-username").get(0).text();
+//        	String roomId = link.attr("data-id");
 //        	String headPortrait = getXiongMaoHPByUrl(herf);//不需要头像
-        	TopHost host = new TopHost("xiongmao",null);
+        	TopHost host = new TopHost("longzhu",null);
         	host.setAddress(herf);
         	host.setHostName(name);
-        	host.setRoomId(roomId);
+        	host.setRoomId(herf);
         	host.setLiveNum(caculateNum(liveNum));
         	
         	hostList.add(host);

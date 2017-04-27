@@ -96,9 +96,9 @@ public class TopOneHostJob {
     /**
      * 抓取龙珠的TOP1主播
      */
-    @Scheduled(fixedDelay=ONE_MINUTE)
+//    @Scheduled(fixedDelay=ONE_MINUTE)
     public void getLongZhuTopHostJob(){
-    	 System.out.println(" 执行龙珠主播数据抓取------topOne-huya");
+    	 System.out.println(" 执行龙珠主播数据抓取------topOne-longzhu");
     	 
 	        String lzUrl = "http://longzhu.com/channels/all";  
 	        List<TopHost> hostList = CommonTools.getLongZhuListHostDataOnline(lzUrl);
@@ -107,4 +107,21 @@ public class TopOneHostJob {
 	        
         System.out.println(" >>龙珠 topOne抓取完毕....");
     }
+    
+    /**
+     * 抓取bilibili的TOP1主播 
+     * use phantomJs
+     */
+    @Scheduled(fixedDelay=ONE_MINUTE)
+    public void getBiLiTopHostJob(){
+    	 System.out.println(" 执行Bilibili主播数据抓取------topOne-Bilibl");
+    	 
+	        String lzUrl = "http://live.bilibili.com/all";  
+	        List<TopHost> hostList = CommonTools.getBiLiListHostDataOnline(lzUrl);
+	        TopHost Top1 = CommonTools.sortTop(hostList, "bili") ;
+	        redisService.handleTopHostRedis(Top1);
+	        
+        System.out.println(" >>BilBiLI topOne抓取完毕....");
+    }    	
+    	
 }
