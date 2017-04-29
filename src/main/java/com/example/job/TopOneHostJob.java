@@ -11,7 +11,7 @@ import com.example.util.CommonTools;
 
 @Component
 public class TopOneHostJob {
-    public final static long ONE_MINUTE =  5 * 1000;
+    public final static long ONE_MINUTE =  500 * 1000;
     
     public final static long HALF_HOUR =  60 * 30 * 1000;
     
@@ -127,7 +127,7 @@ public class TopOneHostJob {
     /**
      * 抓取美拍的TOP1主播
      */
-//    @Scheduled(fixedDelay=ONE_MINUTE)
+    @Scheduled(fixedDelay=ONE_MINUTE)
     public void getMeiPaiTopHostJob(){
     	 System.out.println(" 执行美拍主播数据抓取------topOne-meipai");
     	 

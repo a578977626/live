@@ -482,7 +482,6 @@ public class CommonTools {
         	host.setHeadPortrait(headPortrait);
         	host.setRoomId(roomId);
         	
-        	//用phnomijs的还是读一个保存一个，因为这个东西不是很稳定而且慢n
         	hostList.add(host);
         } 
         return hostList;

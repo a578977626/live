@@ -20,7 +20,9 @@ public abstract class WebDriverManBase {
 		}
         return driver;
     }
-	
+	/**
+	 * 退出访问端
+	 */
 	public static void teardown() {
 		if (driver != null) {
 			driver.quit();
